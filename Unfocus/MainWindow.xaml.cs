@@ -36,7 +36,8 @@ namespace Unfocus
         {
             tbIcon = new TaskbarIcon();
             tbIcon.Icon = Properties.Resources.Eyeball;
-            tbIcon.Visibility = Visibility.Visible;
+            tbIcon.Visibility = Visibility.Hidden;
+            tbIcon.LeftClickCommand = new ShowWindowCommand(this);
         }
 
         // probs break this out into a class (ActivityMonitor)
@@ -51,6 +52,12 @@ namespace Unfocus
 
             activityTimer.Elapsed += ActivityTimer_Elapsed;
             activityTimer.Start();
+        }
+
+        private void StopActivityMonitor()
+        {
+            activityTimer.Elapsed -= ActivityTimer_Elapsed;
+            activityTimer.Stop();
         }
 
         private void StartAlerts()
@@ -82,7 +89,7 @@ namespace Unfocus
             {
                 Debug.WriteLine("Displaying alert.");
 
-                tbIcon.ShowCustomBalloon(new ReminderBalloon(), PopupAnimation.Slide, 4000);
+                tbIcon.ShowCustomBalloon(new ReminderBalloon(), PopupAnimation.Slide, 5000);
             });
         }
 
@@ -91,7 +98,7 @@ namespace Unfocus
             var timeSinceLastInput = WinBindings.TimeSinceLastInput();
             var timedOut = timeSinceLastInput > Config.ActivityTimeout;
 
-            Debug.WriteLine(string.Format("Time since last input: {0}", timeSinceLastInput.TotalMilliseconds));
+            Debug.WriteLine(string.Format("Time since last input: {0} ms", timeSinceLastInput.TotalMilliseconds));
 
             if (timedOut && running)
             {
@@ -105,6 +112,42 @@ namespace Unfocus
 
                 StartAlerts();
             }
+        }
+
+        private void btnStart_Click(object sender, RoutedEventArgs e)
+        {
+            StartAlerts();
+            StartActivityMonitor();
+        }
+
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+            StopAlerts();
+            StopActivityMonitor();
+        }
+
+        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            // Collapse to tray
+            this.Visibility = Visibility.Hidden;
+            tbIcon.Visibility = Visibility.Visible;
+        }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+            tbIcon.Visibility = Visibility.Collapsed;
+            tbIcon.Dispose();
+
+            Environment.Exit(0);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+
+            // Collapse to tray
+            this.Visibility = Visibility.Hidden;
+            tbIcon.Visibility = Visibility.Visible;
         }
     }
 }

@@ -65,6 +65,7 @@
     <Compile Include="ReminderBalloon.xaml.cs">
       <DependentUpon>ReminderBalloon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ShowWindowCommand.cs" />
     <Compile Include="WinBindings.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -109,7 +110,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\eyeball.ico" />
