@@ -35,7 +35,7 @@
 
         <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="btnStart" Content="Start" Height="25" Width="80" Margin="5 10" Click="btnStart_Click" />
-            <Button x:Name="btnStop" Content="Stop" Height="25" Width="80" Margin="5 10" Click="btnStop_Click" />
+            <Button x:Name="btnStop" Content="Stop" Height="25" Width="80" Margin="5 10" Click="btnStop_Click" IsEnabled="False" />
             <Button x:Name="btnMinimize" Content="Minimize" Height="25" Width="80" Margin="5 10" Click="btnMinimize_Click" />
             <Button x:Name="btnExit" Content="Exit" Height="25" Width="80" Margin="5 10" Click="btnExit_Click" />
         </StackPanel>

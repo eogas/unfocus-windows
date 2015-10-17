@@ -25,11 +25,16 @@ namespace Unfocus
 
             Config.ReadConfig();
 
+            InitFields();
+
             InitTaskbarIcon();
+        }
 
-            StartAlerts();
-
-            StartActivityMonitor();
+        private void InitFields()
+        {
+            tbActivityCheckFrequency.Text = Config.ActivityCheckFrequency.TotalMilliseconds.ToString();
+            tbActivityTimeout.Text = Config.ActivityTimeout.TotalMilliseconds.ToString();
+            tbReminderInterval.Text = Config.ReminderInterval.TotalMilliseconds.ToString();
         }
 
         private void InitTaskbarIcon()
@@ -116,14 +121,39 @@ namespace Unfocus
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
+            var activityTimeoutMS = long.Parse(tbActivityTimeout.Text);
+            Config.ActivityTimeout = TimeSpan.FromMilliseconds(activityTimeoutMS);
+
+            var checkFreqMS = long.Parse(tbActivityCheckFrequency.Text);
+            Config.ActivityCheckFrequency = TimeSpan.FromMilliseconds(checkFreqMS);
+
+            var reminderMS = long.Parse(tbReminderInterval.Text);
+            Config.ReminderInterval = TimeSpan.FromMilliseconds(reminderMS);
+
             StartAlerts();
             StartActivityMonitor();
+
+            btnStart.IsEnabled = false;
+            btnStop.IsEnabled = true;
+
+            tbActivityCheckFrequency.IsEnabled = false;
+            tbActivityTimeout.IsEnabled = false;
+            tbReminderInterval.IsEnabled = false;
+
+            Config.SaveConfig();
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             StopAlerts();
             StopActivityMonitor();
+
+            btnStart.IsEnabled = true;
+            btnStop.IsEnabled = false;
+
+            tbActivityCheckFrequency.IsEnabled = true;
+            tbActivityTimeout.IsEnabled = true;
+            tbReminderInterval.IsEnabled = true;
         }
 
         private void btnMinimize_Click(object sender, RoutedEventArgs e)
